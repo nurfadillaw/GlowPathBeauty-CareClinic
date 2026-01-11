@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlowPath POS - Kasir Nurfadillah</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Courier+Prime&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-pink: #f4d3d3;
+            --accent-pink: #e0a9a9;
+            --dark-pink: #8d5d5d;
+            --text: #5a4b4b;
+            --white: #ffffff;
+            --bg: #fff9f9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
+        /* --- UI HEADER --- */
+        .logo {
+            font-size: 1.8rem;
+            /* Ukuran teks judul */
+            font-weight: 600;
+        }
+
+        .pink-text {
+            color: #e91e63;
+            /* Warna Pink Cerah */
+        }
+
+        .grey-text {
+            color: #d3baba;
+            /* Warna Abu-abu kecokelatan halus */
+            font-weight: 300;
+            /* Membuat teks lebih tipis */
+            margin-left: 5px;
+        }
+
+        /* Penyesuaian Header agar sejajar */
+        header {
+            background: var(--white);
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            /* Garis bawah tipis */
+        }
+
+        header {
+            background: var(--white);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--primary-pink);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 1.4rem;
+            color: var(--dark-pink);
+        }
+
+        .staff-info {
+            text-align: right;
+        }
+
+        #clock {
+            font-weight: 600;
+            color: var(--dark-pink);
+            font-size: 0.9rem;
+        }
+
+        .cashier-name {
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .search-container {
+            padding: 15px 5%;
+            background: var(--white);
+            border-bottom: 1px solid #eee;
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: 2px solid var(--primary-pink);
+            outline: none;
+            font-family: inherit;
+        }
+
+        .container {
+            display: flex;
+            padding: 20px;
+            gap: 20px;
+            max-width: 1400px;
+            margin: auto;
+        }
+
+        .menu-section {
+            flex: 2.5;
+        }
+
+        .cart-section {
+            flex: 1;
+        }
+
+        /* --- TABS --- */
+        .category-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .tab {
+            padding: 8px 18px;
+            background: var(--white);
+            border: 2px solid var(--primary-pink);
+            border-radius: 20px;
+            cursor: pointer;
+            color: var(--dark-pink);
+            font-weight: 600;
+            white-space: nowrap;
+            transition: 0.3s;
+            font-size: 0.85rem;
+        }
+
+        .tab.active {
+            background: var(--primary-pink);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- CARDS --- */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid #fceeee;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-pink);
+        }
+
+        .card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        .card-info {
+            padding: 12px;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .card h4 {
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+            color: var(--dark-pink);
+        }
+
+        .card .desc {
+            font-size: 0.72rem;
+            color: #777;
+            margin-bottom: 8px;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 32px;
+        }
+
+        .card .price {
+            color: var(--accent-pink);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        /* --- CART --- */
+        .cart-card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 20px;
+            border: 2px solid var(--primary-pink);
+            position: sticky;
+            top: 160px;
+        }
+
+        .member-box {
+            background: #fff2f2;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cart-items {
+            max-height: 250px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #fff0f0;
+            font-size: 0.85rem;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--dark-pink);
+            border-top: 2px dashed var(--primary-pink);
+            padding-top: 10px;
+        }
+
+        .btn-checkout {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent-pink);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 1rem;
+        }
+
+        /* --- MODAL --- */
+        #modalInput {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            width: 350px;
+            text-align: center;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        /* --- PRINT A4 --- */
+        #struk-cetak {
+            display: none;
+            background: white;
+            color: black;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            #struk-cetak,
+            #struk-cetak * {
+                visibility: visible;
+            }
+
+            #struk-cetak {
+                display: block !important;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 50px;
+                font-family: 'Courier Prime', monospace;
+                font-size: 14pt;
+            }
+
+            @page {
+                margin: 0;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .cart-section {
+                order: -1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1 class="logo">
+            <span class="pink-text">GlowPath</span>
+            <span class="grey-text">Beauty & Care Clinic</span>
+        </h1>
+        <div class="staff-info">
+            <div id="clock"></div>
+            <div class="cashier-name">Kasir: <strong>Nurfadillah</strong></div>
+        </div>
+    </header>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Cari layanan (contoh: Facial, Spa, Make Up)..."
+            onkeyup="renderMenu()">
+    </div>
+
+    <main class="container">
+        <section class="menu-section">
+            <div class="category-tabs" id="tab-container"></div>
+            <div class="services-grid" id="services-grid"></div>
+        </section>
+
+        <aside class="cart-section">
+            <div class="cart-card">
+                <h3>Keranjang</h3>
+                <div class="member-box">
+                    <input type="checkbox" id="isMember" onchange="updateUI()">
+                    <label for="isMember">Member VIP (Diskon 10%)</label>
+                </div>
+                <div id="cart-items" class="cart-items"></div>
+                <div class="total-row">
+                    <span>TOTAL</span>
+                    <span id="total-price">Rp 0</span>
+                </div>
+                <button class="btn-checkout" onclick="openModal()">PROSES PEMBAYARAN</button>
+                <button onclick="resetCart()"
+                    style="width:100%; background:none; border:none; color:grey; cursor:pointer; font-size: 0.7rem; margin-top:10px;">Batal
+                    Pesanan</button>
+            </div>
+        </aside>
+    </main>
+
+    <div id="modalInput">
+        <div class="modal-content">
+            <h4>Input Pembayaran</h4>
+            <input type="text" id="custName" placeholder="Nama Pelanggan">
+            <input type="number" id="cashAmount" placeholder="Uang Tunai (Rp)">
+            <button class="btn-checkout" onclick="prosesCetak()">CETAK STRUK</button>
+            <button onclick="closeModal()"
+                style="border:none; background:none; margin-top:10px; cursor:pointer; color: #aaa;">Kembali</button>
+        </div>
+    </div>
+
+    <div id="struk-cetak">
+        <center>
+            <h1 style="font-size: 30pt;">GLOWPATH SALON & CLINIC</h1>
+            <p>Jl. Imam Bonjol No. 3E, Kisaran</p>
+            <p id="s-tgl"></p>
+            <p>============================================================</p>
+        </center>
+        <div style="display:flex; justify-content:space-between;">
+            <span>Pelanggan: <strong id="s-nama"></strong></span>
+            <span>Kasir: <strong>Nurfadillah</strong></span>
+        </div>
+        <p>------------------------------------------------------------</p>
+        <div id="s-list"></div>
+        <p>------------------------------------------------------------</p>
+        <div style="display:flex; justify-content:space-between"><span>Subtotal</span><span id="s-subtotal"></span>
+        </div>
+        <div style="display:flex; justify-content:space-between; color: red;" id="s-disc-row"><span>Diskon Member
+                (10%)</span><span id="s-disc"></span></div>
+        <div style="display:flex; justify-content:space-between; font-weight: bold; font-size: 22pt; margin: 20px 0;">
+            <span>TOTAL</span><span id="s-total"></span>
+        </div>
+        <div style="display:flex; justify-content:space-between"><span>Tunai</span><span id="s-tunai"></span></div>
+        <div style="display:flex; justify-content:space-between"><span>Kembalian</span><span id="s-kembali"></span>
+        </div>
+        <p>============================================================</p>
+        <center>
+            <p style="margin-top: 30px;">Terima Kasih Atas Kunjungan Anda</p>
+            <p>Glow your face, glow your life!</p>
+        </center>
+    </div>
+
+    <script>
+        const categories = ["Semua", "Wajah", "Tubuh", "Rambut", "Kuku", "Make Up", "Paket"];
+
+        const services = [
+            // WAJAH
+            { name: 'Facial Basic', price: 75000, cat: 'Wajah', img: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=400', desc: 'Pembersihan komedo manual, massage wajah, dan masker standar.' },
+            { name: 'Facial Acne', price: 100000, cat: 'Wajah', img: 'https://images.unsplash.com/photo-1512290923902-8a9f81dc2069?w=400', desc: 'Mengeringkan jerawat meradang dan mengecilkan pori-pori.' },
+            { name: 'Facial Brightening', price: 120000, cat: 'Wajah', img: 'https://images.unsplash.com/photo-1596755389378-c31d21fd1273?w=400', desc: 'Mencerahkan kulit kusam agar wajah tampak putih bersih.' },
+            { name: 'Facial Whitening', price: 140000, cat: 'Wajah', img: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400', desc: 'Fokus memudarkan flek hitam dan bekas jerawat bandel.' },
+            { name: 'Facial Anti Aging', price: 150000, cat: 'Wajah', img: 'https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=400', desc: 'Mengencangkan kulit kendur dan menyamarkan kerutan halus.' },
+            { name: 'Facial Detox', price: 130000, cat: 'Wajah', img: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=400', desc: 'Mengeluarkan racun polusi dan sisa makeup dari pori-pori.' },
+            { name: 'Facial Gold', price: 180000, cat: 'Wajah', img: 'https://images.unsplash.com/photo-1600428791230-1a183b4b8887?w=400', desc: 'Serum emas premium untuk wajah kenyal dan glowing instan.' },
+            { name: 'Microdermabrasion', price: 200000, cat: 'Wajah', img: 'https://images.unsplash.com/photo-1552693673-1bf958298935?w=400', desc: 'Pengelupasan sel mati untuk tekstur kulit halus dan rata.' },
+            { name: 'Chemical Peeling', price: 220000, cat: 'Wajah', img: 'https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=400', desc: 'Cairan khusus untuk regenerasi kulit baru yang lebih bersih.' },
+            { name: 'Totok Wajah', price: 80000, cat: 'Wajah', img: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=400', desc: 'Pijat saraf wajah agar wajah segar dan awet muda.' },
+
+            // TUBUH
+            { name: 'Body Spa', price: 180000, cat: 'Tubuh', img: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=400', desc: 'Relaksasi total dengan pijat, lulur, dan berendam aroma.' },
+            { name: 'Body Massage', price: 120000, cat: 'Tubuh', img: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=400', desc: 'Pijat seluruh badan 60 menit untuk menghilangkan capek.' },
+            { name: 'Body Scrub', price: 150000, cat: 'Tubuh', img: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=400', desc: 'Lulur butiran halus untuk mengangkat daki dan sel mati.' },
+            { name: 'Body Whitening', price: 200000, cat: 'Tubuh', img: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=400', desc: 'Masker badan khusus memutihkan kulit secara merata.' },
+            { name: 'Hot Stone Massage', price: 220000, cat: 'Tubuh', img: 'https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?w=400', desc: 'Pijat batu panas untuk melancarkan sirkulasi darah.' },
+
+            // RAMBUT
+            { name: 'Haircut', price: 30000, cat: 'Rambut', img: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400', desc: 'Potong rambut stylish sesuai model keinginan pelanggan.' },
+            { name: 'Cuci + Blow', price: 40000, cat: 'Rambut', img: 'https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=400', desc: 'Cuci bersih dan blow bervolume agar rambut rapi.' },
+            { name: 'Creambath', price: 60000, cat: 'Rambut', img: 'https://images.unsplash.com/photo-1562322140-8baeececf3df?w=400', desc: 'Nutrisi akar rambut dengan massage kepala & pundak.' },
+            { name: 'Hair Spa', price: 90000, cat: 'Rambut', img: 'https://images.unsplash.com/photo-1527799822394-30aef4073ae7?w=400', desc: 'Perawatan mendalam untuk rambut kering dan rusak.' },
+            { name: 'Smoothing', price: 300000, cat: 'Rambut', img: 'https://images.unsplash.com/photo-1595476108010-b4d1f80d9179?w=400', desc: 'Pelurusan permanen agar rambut lurus dan lembut.' },
+
+            // KUKU
+            { name: 'Manicure', price: 50000, cat: 'Kuku', img: 'https://images.unsplash.com/photo-1610992015732-2449b0ec9443?w=400', desc: 'Potong kuku, rapikan kutikula, dan massage tangan.' },
+            { name: 'Pedicure', price: 60000, cat: 'Kuku', img: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=400', desc: 'Bersihkan kuku kaki dan tumit yang pecah-pecah.' },
+            { name: 'Nail Art', price: 100000, cat: 'Kuku', img: 'https://images.unsplash.com/photo-1604654894610-df49ff66a7cb?w=400', desc: 'Lukisan atau hiasan kuku dengan motif estetik.' },
+            { name: 'Gel Polish', price: 120000, cat: 'Kuku', img: 'https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=400', desc: 'Kuteks gel awet dan berkilau yang dikeringkan lampu UV.' },
+
+            // MAKE UP
+            { name: 'Make Up Natural', price: 150000, cat: 'Make Up', img: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400', desc: 'Riasan ringan (flawless) untuk acara harian.' },
+            { name: 'Make Up Wisuda', price: 250000, cat: 'Make Up', img: 'https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=400', desc: 'Makeup tahan lama dengan bulu mata palsu pilihan.' },
+            { name: 'Make Up Wedding', price: 600000, cat: 'Make Up', img: 'https://images.unsplash.com/photo-1523263685547-52448b897375?w=400', desc: 'Riasan pengantin eksklusif untuk hari istimewa.' },
+            { name: 'Hair Do', price: 200000, cat: 'Make Up', img: 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?w=400', desc: 'Sanggul modern atau penataan hijab styling.' },
+
+            // PAKET
+            { name: 'Paket Glow Up', price: 180000, cat: 'Paket', img: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400', desc: 'Hemat: Facial Basic + Creambath + Cuci Blow.' },
+            { name: 'Paket Relax', price: 250000, cat: 'Paket', img: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=400', desc: 'Hemat: Body Massage 60m + Body Spa Lulur.' },
+            { name: 'Paket Wedding', price: 750000, cat: 'Paket', img: 'https://images.unsplash.com/photo-1523263685547-52448b897375?w=400', desc: 'Lengkap: Makeup Pengantin + Hair Do + Nail Art.' }
+        ];
+
+        let cart = [];
+        let currentCat = 'Semua';
+
+        function init() {
+            const tabBox = document.getElementById('tab-container');
+            tabBox.innerHTML = categories.map(c => `<button class="tab ${c == 'Semua' ? 'active' : ''}" onclick="filter('${c}', this)">${c}</button>`).join('');
+            renderMenu();
+        }
+
+        function filter(cat, btn) {
+            currentCat = cat;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            renderMenu();
+        }
+
+        function renderMenu() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const grid = document.getElementById('services-grid');
+
+            const filtered = services.filter(s => {
+                const matchCat = currentCat === 'Semua' || s.cat === currentCat;
+                const matchSearch = s.name.toLowerCase().includes(query);
+                return matchCat && matchSearch;
+            });
+
+            grid.innerHTML = filtered.map(s => `
+            <div class="card" onclick="addToCart('${s.name}', ${s.price})">
+                <img src="${s.img}" alt="${s.name}">
+                <div class="card-info">
+                    <h4>${s.name}</h4>
+                    <p class="desc">${s.desc}</p>
+                    <p class="price">Rp ${s.price.toLocaleString()}</p>
+                </div>
+            </div>
+        `).join('');
+        }
+
+        function addToCart(name, price) {
+            cart.push({ name, price });
+            updateUI();
+        }
+
+        function updateUI() {
+            const list = document.getElementById('cart-items');
+            list.innerHTML = cart.map(i => `<div class="item-row"><span>${i.name}</span><span>${i.price.toLocaleString()}</span></div>`).join('');
+
+            const sub = cart.reduce((a, b) => a + b.price, 0);
+            const total = document.getElementById('isMember').checked ? sub * 0.9 : sub;
+            document.getElementById('total-price').innerText = `Rp ${total.toLocaleString()}`;
+        }
+
+        function openModal() { if (cart.length > 0) document.getElementById('modalInput').style.display = 'flex'; }
+        function closeModal() { document.getElementById('modalInput').style.display = 'none'; }
+
+        function prosesCetak() {
+            const nama = document.getElementById('custName').value || "UMUM";
+            const tunai = parseInt(document.getElementById('cashAmount').value) || 0;
+            const sub = cart.reduce((a, b) => a + b.price, 0);
+            const isMember = document.getElementById('isMember').checked;
+            const total = isMember ? sub * 0.9 : sub;
+
+            if (tunai < total) return alert("Uang tunai kurang!");
+
+            document.getElementById('s-tgl').innerText = new Date().toLocaleString('id-ID');
+            document.getElementById('s-nama').innerText = nama.toUpperCase();
+            document.getElementById('s-subtotal').innerText = `Rp ${sub.toLocaleString()}`;
+            document.getElementById('s-total').innerText = `Rp ${total.toLocaleString()}`;
+            document.getElementById('s-tunai').innerText = `Rp ${tunai.toLocaleString()}`;
+            document.getElementById('s-kembali').innerText = `Rp ${(tunai - total).toLocaleString()}`;
+
+            document.getElementById('s-disc-row').style.display = isMember ? 'flex' : 'none';
+            document.getElementById('s-disc').innerText = `-Rp ${(sub * 0.1).toLocaleString()}`;
+
+            document.getElementById('s-list').innerHTML = cart.map(i => `
+            <div style="display:flex; justify-content:space-between; margin-bottom: 8px;">
+                <span>${i.name}</span><span>${i.price.toLocaleString()}</span>
+            </div>
+        `).join('');
+
+            closeModal();
+            window.print();
+            resetCart();
+        }
+
+        function resetCart() { cart = []; updateUI(); document.getElementById('isMember').checked = false; }
+
+        setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleString('id-ID'), 1000);
+        init();
+    </script>
+</body>
+
+</html>
